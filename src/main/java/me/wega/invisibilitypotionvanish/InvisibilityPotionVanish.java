@@ -72,10 +72,17 @@ public final class InvisibilityPotionVanish extends JavaPlugin implements Listen
                         }
 
                         if (event.getPacketType() == PacketType.Play.Server.REMOVE_ENTITY_EFFECT) {
-                            final int effectId = event.getPacket()
-                                    .getIntegers()
-                                    .read(1);
+                            // Newer versions use effect types, older use integers to specify the effect id
 
+                            Integer effectId;
+                            final PotionEffectType potionEffectType = event.getPacket().getEffectTypes().readSafely(0);
+                            if (potionEffectType != null) {
+                                effectId = potionEffectType.getId();
+                            } else {
+                                effectId = event.getPacket().getIntegers().readSafely(1);
+                            }
+
+                            if (effectId == null) return;
                             if (effectId != PotionEffectType.INVISIBILITY.getId()) return;
 
                             showPlayerToEveryone(target);
@@ -85,31 +92,39 @@ public final class InvisibilityPotionVanish extends JavaPlugin implements Listen
         );
     }
 
-    private void hidePlayerFromEveryone(Player target) {
-        hiddenPlayers.add(target.getUniqueId());
+    private void hidePlayerFromEveryone(final Player target) {
+        if (!hiddenPlayers.add(target.getUniqueId()))
+            return;
 
         for (final Player viewer : Bukkit.getOnlinePlayers()) {
-            if (!viewer.equals(target)) 
+            if (!viewer.equals(target))
                 viewer.hidePlayer(target);
         }
     }
 
-    private void showPlayerToEveryone(Player target) {
-        hiddenPlayers.remove(target.getUniqueId());
+    private void showPlayerToEveryone(final Player target) {
+        if (!hiddenPlayers.remove(target.getUniqueId()))
+            return;
 
         for (final Player viewer : Bukkit.getOnlinePlayers()) {
-            if (!viewer.equals(target)) 
+            if (!viewer.equals(target))
                 viewer.showPlayer(target);
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    @EventHandler
+    public void onPlayerJoin(final PlayerJoinEvent event) {
+        final Player viewer = event.getPlayer();
+
         for (final UUID hiddenPlayerId : hiddenPlayers) {
             final Player hiddenPlayer = Bukkit.getPlayer(hiddenPlayerId);
-            if (hiddenPlayer != null)
-                event.getPlayer().hidePlayer(hiddenPlayer);
+
+            if (hiddenPlayer != null && !viewer.equals(hiddenPlayer))
+                viewer.hidePlayer(hiddenPlayer);
         }
+        
+        if (viewer.hasPotionEffect(PotionEffectType.INVISIBILITY)) 
+            hidePlayerFromEveryone(viewer);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
