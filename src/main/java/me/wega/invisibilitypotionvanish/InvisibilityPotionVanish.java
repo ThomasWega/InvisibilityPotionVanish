@@ -52,10 +52,16 @@ public final class InvisibilityPotionVanish extends JavaPlugin implements Listen
                 ) {
                     @Override
                     public void onPacketSending(final PacketEvent event) {
-                        final Player target = event.getPlayer();
+                        final int entityId = event.getPacket()
+                                .getIntegers()
+                                .read(0);
+                        final Player target = Bukkit.getOnlinePlayers().stream()
+                                .filter(player -> player.getEntityId() == entityId)
+                                .findFirst()
+                                .orElse(null);
+                        if (target == null) return;
 
                         if (event.getPacketType() == PacketType.Play.Server.ENTITY_EFFECT) {
-                            System.out.println("ENTITY EFFECT = " + event.getPacket().getBytes().read(0));
                             final byte effectId = event.getPacket()
                                     .getBytes()
                                     .read(0);
@@ -66,7 +72,6 @@ public final class InvisibilityPotionVanish extends JavaPlugin implements Listen
                         }
 
                         if (event.getPacketType() == PacketType.Play.Server.REMOVE_ENTITY_EFFECT) {
-                            System.out.println("REMOVE ENTITY EFFECT = " + event.getPacket().getIntegers().read(1));
                             final int effectId = event.getPacket()
                                     .getIntegers()
                                     .read(1);
@@ -84,10 +89,8 @@ public final class InvisibilityPotionVanish extends JavaPlugin implements Listen
         hiddenPlayers.add(target.getUniqueId());
 
         for (final Player viewer : Bukkit.getOnlinePlayers()) {
-            if (!viewer.equals(target)) {
-                System.out.println("HIDE PLAYER = " + target.getName() + " FROM " + viewer.getName());
+            if (!viewer.equals(target)) 
                 viewer.hidePlayer(target);
-            }
         }
     }
 
@@ -95,17 +98,13 @@ public final class InvisibilityPotionVanish extends JavaPlugin implements Listen
         hiddenPlayers.remove(target.getUniqueId());
 
         for (final Player viewer : Bukkit.getOnlinePlayers()) {
-            if (!viewer.equals(target)) {
-                System.out.println("SHOW PLAYER = " + target.getName() + " TO " + viewer.getName());
+            if (!viewer.equals(target)) 
                 viewer.showPlayer(target);
-            }
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        System.out.println("PLAYER JOIN = " + event.getPlayer().getName());
-        System.out.println("HIDDEN PLAYERs = " + hiddenPlayers);
         for (final UUID hiddenPlayerId : hiddenPlayers) {
             final Player hiddenPlayer = Bukkit.getPlayer(hiddenPlayerId);
             if (hiddenPlayer != null)
