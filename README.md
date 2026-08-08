@@ -1,5 +1,5 @@
 # InvisibilityPotionVanish
----
+
 Makes players truly invisible when they have the Invisibility potion effect.  
 Normally, invisible players are still visible via potion particles, holding items or appearing in the tab list or commands.
 This plugin completely hides them from all of these in similar fashion to how vanish plugins work.
