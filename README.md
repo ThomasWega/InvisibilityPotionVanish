@@ -12,13 +12,7 @@ This plugin completely hides them from all of these in similar fashion to how va
 ---
 
 ## Vanilla vs with InvisibilityPotionVanish
-
-| Vanilla (no plugin)                         | With InvisibilityPotionVanish                       |
-|---------------------------------------------|-----------------------------------------------------|
-| ![vanilla](./gifs/vanilla-invisibility.gif) | ![with-plugin](./gifs/with-plugin-invisibility.gif) |
-
-*(Replace the GIF paths/links with your actual files or hosted URLs.)*
-
+![Imgur Image](https://i.imgur.com/zBxnIQ6.gif)
 ---
 
 No commands, No config. Just drop the JAR into `plugins/`, restart, and enjoy.
