@@ -28,8 +28,8 @@ processResources {
     }
 }
 
-java.sourceCompatibility = 17
-java.targetCompatibility = 17
+java.sourceCompatibility = 8
+java.targetCompatibility = 8
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
