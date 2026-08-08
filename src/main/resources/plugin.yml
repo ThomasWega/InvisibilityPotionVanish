@@ -1,0 +1,8 @@
+name: InvisibilityPotionVanish
+version: '${version}'
+main: me.wega.invisibilitypotionvanish.InvisibilityPotionVanish
+api-version: "1.8"
+author: ThomasWega
+description: "A plugin that makes players actually invisible when they drink an invisibility potion."
+depend:
+  - ProtocolLib

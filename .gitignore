@@ -1,0 +1,39 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# VM Crash Logs
+hs_err_pid*
+
+# IntelliJ
+out/
+target/
+.idea/
+*.iml
+
+# Github
+.github/
+LICENSE
+
+# Gradle
+bin/
+build/
+.gradle/
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
+
+# MacOS
+.DS_Store
+/.idea/

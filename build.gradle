@@ -1,0 +1,37 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+}
+
+group 'me.wega'
+version '1.0-SNAPSHOT'
+
+repositories {
+    maven { url 'https://maven.elmakers.com/repository' }
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+    compileOnly "com.comphenix.protocol:ProtocolLib:5.3.0";
+}
+
+processResources {
+    filter(ReplaceTokens, tokens: [
+            version: project.property('version')
+    ])
+}
+
+java.sourceCompatibility = 17
+java.targetCompatibility = 17
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs.add('--release')
+    options.compilerArgs.add('8')
+}
+
+tasks.withType(ProcessResources).configureEach {
+    filteringCharset = 'UTF-8'
+}
